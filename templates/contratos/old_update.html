@@ -1,0 +1,347 @@
+{% extends 'contratos/base.html' %}
+
+
+
+{% block head %}
+<title>Atualizar Contrato</title>
+<style>
+    #qtd_transporte,#qtd_combustivel{
+        width: 115px;
+        height: 25px;
+      }
+    
+
+    input[name='vl_total']{
+        pointer-events: none;
+        outline: none"
+    
+      }
+      body{
+        background-color: rgb(218, 218, 218)!important;
+      }
+      .container{
+        background-color: rgb(255, 255, 255) ;
+        border-radius: 10px;
+        padding: 25px !important;
+        max-width: 1200px!important;
+      }
+
+      
+  input[type=number]::-webkit-inner-spin-button { 
+    -webkit-appearance: none;
+    
+}
+</style>
+{% endblock head %}
+
+
+{% block conteudo %}
+
+    <div class="py-4"></div>
+    <div id="main">
+    <div class="container">
+        <form action="" id="formulario" method="post" class="form-contrato">
+            {% csrf_token %}
+            <div class="row">
+    
+                <div class="col-6">
+                    <h1>Contrato</h1>
+                    <div class="row" style="margin-top:10px;">
+                        <select name="select" id="select" class="form-select" style="width: 470px;">
+                            {% for cliente in pessoas %}
+                            {% if cliente.cod_pessoa == models_contrato.cod_pessoa %}
+                            <option value="{{ cliente.cod_pessoa }}" selected>{{ cliente.nome }}    
+                            {% else %}
+                            <option value="{{ cliente.cod_pessoa }}">{{ cliente.nome }}</option>
+                            {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="py-2"></div>
+
+                    <div class="row">
+                        <select name="select-franquia" id="select-franquia" onchange="atualizar(),atualiza_preco(),att_texto_franquia()" class="form-select" style="width: 150px;">
+                            <option value="1" id="1">Diario</option>
+                            <option value="7" id="7">Semanal</option>
+                            <option value="15" id="15">Quinzenal</option>
+                            <option value="30" id="30">Mensal</option>
+                          </select>
+                
+                          <select name="horas-select" id="select-horas" class="form-select" style="width: 150px; margin-left:5px">
+                            <option value="8" id="8">8 horas</option>
+                            <option value="12" id="12">12 horas</option>
+                            <option value="16" id="16">16 horas</option>
+                          </select>{{ form_contrato.vl_contrato }}</div>
+
+                    <div class="py-2"></div>
+
+                    <div class="row">
+                        {{ form_contrato.dt_inicio_contrato}} {{ form_contrato.dt_fim_contrato }}
+                    </div>
+
+                    <div class="py-3"></div>
+                </div>
+
+                <div class="col-6">
+                    <h3>Variaveis</h3>
+                    <ul style="list-style: none;">
+
+                        <li>
+                            {% if models_contrato.cabos == 'S' %}
+                                <input type="checkbox" name="cabos" id="cabos" checked value="S">
+                                <label for="cabos">Cabos</label>
+                            {% else %}
+                                <input type="checkbox" name="cabos" id="cabos" value="S">
+                                <label for="cabos">Cabos</label>
+                            {% endif %}
+                        </li>
+
+                        <li>
+                            {% if models_contrato.chave_transf_auto == 'S' %}
+                                <input type="checkbox" name="chave_transf_auto" id="chave_transf_auto" checked value="S">
+                                <label for="chave_transf_auto">Chave transferencia Automatica</label>
+                            {% else %}
+                                <input type="checkbox" name="chave_transf_auto" id="chave_transf_auto" value="S">
+                                <label for="chave_transf_auto">Chave transferencia Automatica</label>
+                            {% endif %}
+                        </li>
+
+                        <li>
+                            {% if models_contrato.chave_transf_manual == 'S' %}
+                                <input type="checkbox" name="chave_transf_manual" id="chave_transf_manual" checked value="S">
+                                <label for="chave_transf_manual">Chave transferencia manual</label>
+                            {% else %}
+                                <input type="checkbox" name="chave_transf_manual" id="chave_transf_manual" value="S">
+                                <label for="chave_transf_manual">Chave transferencia manual</label>
+                            {% endif %}
+                        </li>
+
+                        <li>
+                            {% if models_contrato.combustivel == 'S' %}
+                                <input type="checkbox" name="combustivel" id="combustivel" value='S' checked onchange="EnviaDados('combustivel')">
+                                <label for="combustivel">Combustivel</label>
+                                    <input type="text" name="qtd_combustivel" style="display:inline-block" class="form-control" id="qtd_combustivel" placeholder="Litros" value="{{models_contrato.qtd_combustivel}}">
+                            {% else %}
+                                <input type="checkbox" name="combustivel" id="combustivel" value="S"  onchange="EnviaDados('combustivel')">
+                                <label for="combustivel" > Combustivel</label>
+                                    <input type="text" name="qtd_combustivel" style="display: none;" class="form-control" id="qtd_combustivel" placeholder="Litros">
+                            {% endif %}
+                        </li>
+
+                        <li>
+                            {% if models_contrato.instalacao == 'S' %}
+                                <input type="checkbox" name="instalacao" id="instalacao" checked value="S">
+                                <label for="instalacao">Instalação</label>
+                            {% else %}
+                                <input type="checkbox" name="instalacao" id="instalacao" value="S">
+                                <label for="instalacao">Instalação</label>
+                            {% endif %}
+                        </li>
+
+                        <li>
+                            {% if models_contrato.transporte == 'S' %}
+                                <input type="checkbox" name="transporte" id="transporte" checked value="S" onchange="EnviaDados('transporte')">
+                                <label for="transporte">Transporte</label>
+                                    <input type="text" style="display:inline-block" name="qtd_transporte" class="form-control" id="qtd_transporte" placeholder="Distancia" value="{{models_contrato.distancia_transporte}}">
+                            {% else %}
+                                    <input type="checkbox" name="transporte" id="transporte" value="S" onchange="EnviaDados('transporte')">
+                                    <label for="transporte">Transporte</label>
+                                        <input type="text" name="qtd_transporte" style="display:none" class="form-control" id="qtd_transporte" placeholder="Distancia">
+                           {% endif %}
+                        </li>
+                        
+                        <li>
+                            {% if models_contrato.manutencao == 'S' %}
+                                <input type="checkbox" name="manutencao" id="manutencao" checked value="S">
+                                <label for="manutencao">Manutenção Periódica</label>
+                            {% else %}
+                                 <input type="checkbox" name="manutencao" id="manutencao" value="S">          
+                                 <label for="manutencao">Manutenção Periódica</label>
+                            {% endif %}
+                        </li>
+
+                    </ul>
+                </div>
+
+            </div>
+            <hr>
+            <h1>Produtos</h1>
+            <div class="py-2"></div>
+
+            {% for dado in form %}
+            <div class="row">
+                <div class="col-sm-auto">
+                    <label for="">Produto <br>
+                        <select name="select_produtos" id="select_produtos" class="form-select"
+                            style="width: 380px;height:35px;margin-top:5px">
+
+                            {% for prod in produto %}
+                            {% if prod.cod_produto == dado.cod_produto %}
+                            <option value="{{ prod.cod_produto }}" selected>{{ prod.desc_produto }}
+                            </option>
+                            {% else %}
+                            <option value="{{ prod.cod_produto }}">{{ prod.desc_produto }}
+                            </option>
+                            {% endif %}
+
+                            {% endfor %}
+                        </select>
+                    </label>
+                </div>
+
+                <div class="col-auto">
+                    <label for="" class="label_dias">Dias</label>
+                    <input type="number" class="form-control" style="margin-top:5px; height:35px; width:100px;"
+                        placeholder="Quantia" name="quantidade" value="{{ dado.quantidade}}" onkeyup="atualiza_preco()">
+
+                </div>
+
+                <div class="col-auto">
+                    <label for="" class="label_valor">Valor Diario</label>
+                    <input type="text" placeholder="Valor diário" name="campo_valor"
+                            value="{{ dado.vl_item_contrato }}" class="form-control" required
+                            style="height: 35px; margin-top: 5px" onkeyup="atualiza_preco()" />
+                </div>
+
+                <div class="col-auto">
+                    <label for="">Total
+                        <input type="text" placeholder="Total" name="vl_total" class="form-control"
+                            value="{{ dado.vl_total_item }}"
+                            style="height: 35px; margin-top: 5px;width:100px ; pointer-events:none; outline:none"
+                            tabindex="-1" />
+                    </label>
+                </div>
+
+                <br>
+
+            </div>
+            {% endfor %}
+            <br>
+            <div>
+                <button id="gera_contrato" type="submit" class="btn btn-primary"
+                    onclick="valida_campos()">Atualizar</button>
+                <a href="{% url 'index' %}" class="btn btn-warning">Voltar</a>
+            </div>
+
+
+        </form>
+        
+    </div>
+</div>
+    <div class="py-4"></div>
+
+    <script>
+        let franquia = '{{ request.session.franquia}}'
+        let carga_horario = '{{ request.session.horas}}'
+        let datai = '{{ request.session.datai}}'
+        let dataf = '{{ request.session.dataf}}'
+
+        window.onload = carregar()
+
+        function carregar() {
+            let valor = document.getElementsByName('campo_valor')
+            let vl_total = document.getElementsByName('vl_total')
+
+            let check_combustivel = document.getElementById('combustivel')
+            if (check_combustivel.checked){
+                let campo_quantidade_litros = document.getElementById('qtd_combustivel')
+                let valor_qtd_litros = campo_quantidade_litros.value.replace(',','.')
+                campo_quantidade_litros.value = valor_qtd_litros
+            }
+
+            let check_transporte = document.getElementById('transporte')
+            if (check_transporte.checked){
+                let quantidade_distancia = document.getElementById('qtd_transporte')
+                let distancia = quantidade_distancia.value.replace(',','.')
+                quantidade_distancia.value = distancia
+            }
+
+            for (let c = 0; c < valor.length; c++) {
+
+                let campo = document.getElementsByName('campo_valor')[c]
+                let campo_valor = campo.value
+                campo_valor = campo_valor.replace(',', '.')
+                campo.value = campo_valor
+
+                let valor_total = vl_total[c].value
+                valor_total = valor_total.replace(',', '.')
+                vl_total[c].value = valor_total
+            }
+            let valor_total_capa = window.document.getElementById('valor_contrato')
+            valor = Number(valor_total_capa.value)
+            valor_total_capa.value = valor.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })
+
+            let select_franquia = window.document.getElementById('select-franquia').value = franquia
+            let select_carga_horaria = window.document.getElementById('select-horas').value = carga_horario
+            let data_inicio = window.document.getElementById('data_inicio').value = datai
+            let data_fim = window.document.getElementById('data_fim').value = dataf
+
+            let label_franquia_texto = ''
+            let label_valor_texto = ''
+
+            switch (franquia){
+            case '1':
+                label_franquia_texto = 'Dias'
+                label_valor_texto = 'Valor Diário'
+                break
+            case '7':
+                label_franquia_texto = 'Semanas'
+                label_valor_texto = 'Valor Semanal'
+                break
+            case '15':
+                label_franquia_texto = 'Quinzenas'
+                label_valor_texto = 'Valor Quinzenal'
+                break
+            case '30':
+                label_franquia_texto = 'Meses'
+                label_valor_texto = 'Valor Mensal'
+                break
+            }
+
+            let label_franquia = window.document.getElementsByClassName('label_dias')
+            let label_valor = window.document.getElementsByClassName('label_valor')
+
+            for (let c = 0 ; c < label_franquia.length ; c++){
+                label_franquia[c].innerHTML = label_franquia_texto
+                label_valor[c].innerHTML = label_valor_texto
+            }
+    }
+
+    function att_texto_franquia(){
+
+            let franquia = window.document.getElementById("select-franquia").value
+
+            let label_franquia_texto = ''
+            let label_valor_texto = ''
+
+            switch (franquia){
+            case '1':
+                label_franquia_texto = 'Dias'
+                label_valor_texto = 'Valor Diário'
+                break
+            case '7':
+                label_franquia_texto = 'Semanas'
+                label_valor_texto = 'Valor Semanal'
+                break
+            case '15':
+                label_franquia_texto = 'Quinzenas'
+                label_valor_texto = 'Valor Quinzenal'
+                break
+            case '30':
+                label_franquia_texto = 'Meses'
+                label_valor_texto = 'Valor Mensal'
+                break
+            }
+
+            let label_franquia = window.document.getElementsByClassName('label_dias')
+            let label_valor = window.document.getElementsByClassName('label_valor')
+
+            for (let c = 0 ; c < label_franquia.length ; c++){
+                label_franquia[c].innerHTML = label_franquia_texto
+                label_valor[c].innerHTML = label_valor_texto
+            }
+    }
+    </script>
+
+{% endblock conteudo %}

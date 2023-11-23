@@ -1,0 +1,37 @@
+{% extends 'contratos/base.html' %}
+
+
+{% block head %}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<style>
+    .container{
+        background-color: rgb(255, 255, 255) ;
+        border-radius: 10px;
+        padding: 25px !important;
+        max-width: 1200px!important;
+        margin-top: 20px;
+        margin-bottom: 150px;
+      }
+</style>
+{% endblock head %}
+
+
+{% block conteudo %}
+<div id="main">
+    <div class="container" style="text-align:center">
+        <div class="py-4"></div>
+        <h1>
+            Deseja gerar a nota de <span style="color:red">remessa</span> do contrato {{ seq_contrato }} ?
+        </h1>
+        <div class="py-4"></div>
+        <form method="post">
+
+            {% csrf_token %}
+            <div class="text-center">
+                <input type="submit" class="btn btn-danger" value="Gerar">
+                <a href="{% url 'index'%}" class="btn btn-info">Voltar</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock conteudo%}

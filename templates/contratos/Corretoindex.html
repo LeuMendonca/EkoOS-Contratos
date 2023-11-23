@@ -1,0 +1,198 @@
+{% extends 'contratos/base.html' %}
+
+{% block head %}
+<title>Home</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+{% endblock head %}
+
+
+{% block conteudo %}
+
+<div class="container">
+    <div class="py-4"></div>
+    <div class="py-3"></div>
+    <form action="" method="get">
+        {% if status == '0' %}
+        <div class="alert alert-success" role="alert" id="msg-sucesso">
+            Nota gerada com sucesso
+        </div>
+        {% endif %}
+
+        {% if status == '1' %}
+        <div class="alert alert-danger" role="alert" id="msg-sucesso">
+            Já possui uma nota fiscal com esse contrato.
+        </div>
+        {% endif %}
+
+        {% if status == '2' %}
+        <div class="alert alert-success" role="alert" id="msg-sucesso">
+            Contrato excluido com sucesso
+        </div>
+        {% endif %}
+
+        {% if status == '3' %}
+        <div class="alert alert-success" role="alert" id="msg-sucesso">
+            Contrato cadastrado com sucesso
+        </div>
+        {% endif %}
+
+        {% if status == '4' %}
+        <div class="alert alert-success" role="alert" id="msg-sucesso">
+            Contrato atualizado com sucesso
+        </div>
+        {% endif %}
+
+        {% if status == '5' %}
+        <div class="alert alert-danger" role="alert" id="msg-sucesso">
+            Pesquisa invalida !!
+        </div>
+        {% endif %}
+
+        {% if status == '6' %}
+        <div class="alert alert-danger" role="alert" id="msg-sucesso">
+            Arquivo PDF inexistente!
+        </div>
+        {% endif %}
+
+        {% if status == '7' %}
+        <div class="alert alert-success" role="alert" id="msg-sucesso">
+            Configurações salvas com sucesso!
+        </div>
+        {% endif %}
+
+        <div class="row">
+            <input type="search" class="form-control" placeholder="Pesquise pelo cliente"
+                style="width:730px;margin-left: 12px;" name="q" value="{{ request.GET.q }}" autofocus>
+            <select name="filtro" id="filtro" style="width: 200px;margin-left:6px;height:38px" class="form-select">
+                <option value="pessoa">Nome do cliente</option>
+                <option value="contrato">Contrato</option>
+            </select>
+
+
+            <div class="form-group col-2">
+                <button class="form-control btn btn-success">Pesquisar</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="py-2"></div>
+    {% csrf_token %}
+    <table class="table table-head table table-bordered mt-auto">
+        <thead>
+            <tr>
+                <th>Sequencial</th>
+                <th>Codigo</th>
+                <th>Nome</th>
+                <th>Valor do Contrato</th>
+                <th>Data Inicial</th>
+                <th>Data Final</th>
+                <th style="text-align:center">Ações</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for contrato in page_obj %}
+
+            <tr>
+                <td> {{ contrato.seq_contrato }}</td>
+                <td>{{ contrato.cod_pessoa }}</td>
+                {% for cliente in pessoa %}
+
+                {% if cliente.cod_pessoa == contrato.cod_pessoa %}
+                <td style="max-width: 45ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ cliente.nome }}
+                </td>
+                {% endif %}
+
+                {% endfor %}
+
+                <td>R$ {{ contrato.vl_contrato|floatformat:2}}</td>
+                <td>{{ contrato.dt_inicio_contrato|date:'d/m/Y' }}</td>
+                <td>{{ contrato.dt_fim_contrato|date:'d/m/Y' }}</td>
+                <td>
+                    <div class="dropdown">
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                          Ações
+                        </button>
+                        <div class="dropdown-menu">
+    
+                        <a href="{% url 'update' contrato.seq_contrato %}" class="btn btn-warning btn-sm"><svg
+                                xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                <path
+                                    d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                <path fill-rule="evenodd"
+                                    d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
+                            </svg>
+                        </a>
+                        <a href="{% url 'delete' contrato.seq_contrato  %}" class="btn btn-danger btn-sm"
+                            style="margin-left: 5px;"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                                <path
+                                    d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z" />
+                            </svg>
+                        </a>
+                        <a href="{% url 'gera-nota' contrato.seq_contrato %}" class="btn btn-info btn-sm"><svg
+                                xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-filetype-xml" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                    d="M14 4.5V14a2 2 0 0 1-2 2v-1a1 1 0 0 0 1-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v9H2V2a2 2 0 0 1 2-2h5.5L14 4.5ZM3.527 11.85h-.893l-.823 1.439h-.036L.943 11.85H.012l1.227 1.983L0 15.85h.861l.853-1.415h.035l.85 1.415h.908l-1.254-1.992 1.274-2.007Zm.954 3.999v-2.66h.038l.952 2.159h.516l.946-2.16h.038v2.661h.715V11.85h-.8l-1.14 2.596h-.025L4.58 11.85h-.806v3.999h.706Zm4.71-.674h1.696v.674H8.4V11.85h.791v3.325Z" />
+                            </svg>
+                        </a>
+
+                        <a href="{% url 'gera-contrato' contrato.seq_contrato%}" class="btn btn-sm btn-success">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-download" viewBox="0 0 16 16">
+                                <path
+                                    d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z" />
+                                <path
+                                    d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                </td>
+            </tr>
+
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}&filtro=pessoa&q={% if request.GET.q %}{{ request.GET.q }}{% endif %}"
+                class="btn btn-primary btn-sm">Antes</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}&filtro=pessoa&q={% if request.GET.q %}{{ request.GET.q }}{% endif %}"
+                class="btn btn-primary btn-sm">Proximo</a>
+            {% endif %}
+        </span>
+    </div>
+</div>
+<div class="py-4"></div>
+
+
+
+<script>
+    const remove_mensagem = setTimeout(sumir, 5000)
+
+    function sumir() {
+        let mensagem = document.querySelector('div#msg-sucesso')
+
+        mensagem.style.display = 'none'
+    }
+</script>
+
+{% endblock conteudo %}
+
+</body>
+
+</html>

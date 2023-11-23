@@ -1,0 +1,67 @@
+
+#botao{
+    background-color: rgb(206, 200, 200);
+    border: solid;
+    width: 150px;
+    cursor: pointer;
+    padding: 5px;
+}
+
+#select,#select-produto {
+    padding: 5px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    margin-bottom: 20px;
+    margin-top: 5px;
+    border-radius: 4px;
+    transition: all linear 160ms;
+    outline: none;
+}
+
+#tela_de_pesquisa{
+    background-color: coral;
+    width: 600px;
+    height: 150px;
+    padding: 25px;
+
+}
+
+
+
+#input {
+    margin-top: 5px;
+}
+
+#tela {
+    background-color: rgb(255, 255, 255);
+    border: solid 1px;
+    padding: 25px;
+    width: 500px;
+    display: none;
+    position: relative;
+}
+
+#campo-cpf {
+    margin-left: 18px;
+}
+
+#campo-cnpj {
+    margin-left: 10px;
+    margin-bottom: 15px;
+}
+
+#opcoes {
+    margin-top: 15px;
+    display: none;
+}
+
+#icone-fechar{
+    position: absolute;
+    margin-left: 90%;
+    cursor: pointer;
+    margin-bottom: 50px;
+}
+
+body{
+    background-color: black;
+}

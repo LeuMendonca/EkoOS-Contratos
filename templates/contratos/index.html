@@ -1,0 +1,303 @@
+{% extends 'contratos/base.html' %}
+
+{% block head %}
+<title>Home</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<style>
+    body{
+        background-color: rgb(218, 218, 218)!important;
+      }
+      .container{
+        background-color: rgb(255, 255, 255)!important ;
+        border-radius: 10px;
+        padding: 15px !important;
+        max-width: 1200px!important;
+        margin-top: 5px;
+    }
+    
+    input[type=number]::-webkit-inner-spin-button { 
+        -webkit-appearance: none;
+        
+    }
+    input[type=number] { 
+       -moz-appearance: textfield;
+       appearance: textfield;
+    
+    }
+</style>
+{% endblock head %}
+
+{% block conteudo %}
+<div id="main">
+    <div class="container">
+
+        <form  method="get">
+            {% if status == '0' %}
+                <div class="alert alert-success" role="alert" id="msg-sucesso">
+                    Nota gerada com sucesso.
+                </div>
+            {% endif %}
+
+            {% if status == '1' %}
+                <div class="alert alert-danger" role="alert" id="msg-sucesso">
+                    Já possui uma nota fiscal com esse contrato.
+                </div>
+            {% endif %}
+
+            {% if status == '2' %}
+                <div class="alert alert-success" role="alert" id="msg-sucesso">
+                    Contrato excluído com sucesso.
+                </div>
+            {% endif %}
+
+            {% if status == '3' %}
+                <div class="alert alert-success" role="alert" id="msg-sucesso">
+                    Contrato cadastrado com sucesso.
+                </div>
+            {% endif %}
+
+            {% if status == '4' %}
+                <div class="alert alert-success" role="alert" id="msg-sucesso">
+                    Contrato atualizado com sucesso.
+                </div>
+            {% endif %}
+
+            {% if status == '5' %}
+                <div class="alert alert-danger" role="alert" id="msg-sucesso">
+                    Pesquisa inválida.
+                </div>
+            {% endif %}
+
+            {% if status == '6' %}
+                <div class="alert alert-danger" role="alert" id="msg-sucesso">
+                    Arquivo PDF inexistente.
+                </div>
+            {% endif %}
+
+            {% if status == '7' %}
+                <div class="alert alert-success" role="alert" id="msg-sucesso">
+                    Configurações salvas com sucesso.
+                </div>
+            {% endif %}
+
+            {% if status == '8' %}
+                <div class="alert alert-danger" role="alert" id="msg-sucesso">
+                    Pedido inexistente.
+                </div>
+            {% endif %}
+
+            {% if status == '9' %}
+                <div class="alert alert-success" role="alert" id="msg-sucesso">
+                    Nota fiscal de remessa gerada com sucesso.
+                </div>
+            {% endif %}
+
+            {% if status == '10' %}
+                <div class="alert alert-success" role="alert" id="msg-sucesso">
+                    Nota fiscal de serviço gerada com sucesso.
+                </div>
+            {% endif %}
+
+            {% if status == '11' %}
+                <div class="alert alert-danger" role="alert" id="msg-sucesso">
+                    Nota fiscal de serviço já foi gerada.
+                </div>
+            {% endif %}
+
+            {% if status == '12' %}
+                <div class="alert alert-danger" role="alert" id="msg-sucesso">
+                    Nota fiscal de remessa já foi gerada.
+                </div>
+            {% endif %}
+
+            {% if status == '13' %}
+                <div class="alert alert-danger" role="alert" id="msg-sucesso">
+                    Não foi possivel excluir o contrato pois já existe nota de remessa ou serviço vinculadas.
+                </div>
+            {% endif %}
+
+            {% if status == '14' %}
+                <div class="alert alert-success" role="alert" id="msg-sucesso">
+                    Contrato fechado com sucesso.
+                </div>
+            {% endif %}
+
+            <div class="row">
+                <input type="search" class="form-control" placeholder="Pesquise pelo cliente"
+                    style="width:750px;margin-left: 12px;height:38px" name="q" value="{{ request.GET.q }}" autofocus id="campo-pesquisa">
+
+                <select name="filtro" id="filtro" style="width: 225px;margin-left:6px;height:38px !important;" class="form-select">
+                    <option value="pessoa">Nome do cliente</option>
+                    <option value="contrato">Contrato</option>
+                </select>
+
+
+                <div class="form-group col-2">
+                    <button class="form-control btn btn-success">Pesquisar</button>
+                </div>
+            </div>
+        </form>
+
+        {% csrf_token %}
+
+        <table class="table table-sm w-100 table-hover table-bordered" id="tabela">
+            <thead style="text-align: center;">
+                <tr>
+                    <th>Sequencial</th>
+                    <th>Código</th>
+                    <th>Nome</th>
+                    <th>Valor do Contrato</th>
+                    <th>Data Inicial</th>
+                    <th>Data Final</th>
+                    <th style="text-align:center">Ações</th>
+                </tr>
+            </thead>
+
+            <tbody style="text-align: center;">
+                {% for contrato in page_obj %}
+
+                <tr>
+                    <td> {{ contrato.seq_contrato }}</td>
+                    <td>{{ contrato.cod_pessoa }}</td>
+                    {% for cliente in pessoa %}
+
+                    {% if cliente.cod_pessoa == contrato.cod_pessoa %}
+                    <td style="max-width: 45ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ cliente.nome }}
+                    </td>
+                    {% endif %}
+
+                    {% endfor %}
+
+                    <td>R$ {{ contrato.vl_contrato|floatformat:2}}</td>
+                    <td>{{ contrato.dt_inicio_contrato|date:'d/m/Y' }}</td>
+                    <td>{{ contrato.dt_fim_contrato|date:'d/m/Y' }}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
+                                Ações
+                            </button>
+
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="{% url 'update' contrato.seq_contrato %}" class="dropdown-item">Atualizar</a>
+                                </li>
+                                
+                                <li>
+                                    <a href="{% url 'delete' contrato.seq_contrato  %}" class="dropdown-item">Excluir</a>
+                                </li>
+
+                                <li>
+                                    <a href="{% url 'fechar' contrato.seq_contrato %}" class="dropdown-item" target="_blank">Fechar Contrato</a>
+                                </li>
+
+                                <li>
+                                    <a href="{% url 'gera-contrato' contrato.seq_contrato %}" class="dropdown-item" target="_blank">Gerar contrato</a>
+                                </li>
+
+                                <li>
+                                <a href="{% url 'gera-nota-remessa' contrato.seq_contrato %}" class="dropdown-item">Gerar nota remessa</a>
+                                </li>
+
+                                </li>
+                                    <a href="{% url 'gera-nota-serv' contrato.seq_contrato %}" class="dropdown-item">Gerar nota serviço</a>
+                                </li>
+                            
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+
+                {% endfor %}
+            </tbody>
+        </table>
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}&filtro=pessoa&q={% if request.GET.q %}{{ request.GET.q }}{% endif %}"
+                class="btn btn-primary btn-sm"><</a>
+            {% endif %}
+
+            <span class="current" style="color:black;margin-left:5px;margin-right:5px">
+                {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+            </span>
+
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}&filtro=pessoa&q={% if request.GET.q %}{{ request.GET.q }}{% endif %}"
+                class="btn btn-primary btn-sm">></a>
+            {% endif %}
+        </span>
+    </div>
+</div>
+
+
+</div>
+
+
+<script>
+
+    // Remover as mensagens de sucesso ou erro após 5 segundos da aparição
+    const remove_mensagem = setTimeout(sumir, 5000)
+    window.onload = contratos_vencidos
+    function sumir() {
+        let mensagem = document.querySelector('div#msg-sucesso')
+
+        mensagem.style.display = 'none'
+    }
+
+    // Coloração dos contratos vencidos
+  function contratos_vencidos(){
+    let campo = document.getElementById("tabela").rows
+    
+
+        for(let c = 1 ; c < campo.length ; c++){
+            let data = campo[c].cells[5].innerHTML
+            let data_lista = data.split("/")
+            let data_convertida = new Date(data_lista[2],(data_lista[1] - 1) , data_lista[0])
+            
+            let data_hoje = Date.now()
+        
+            if(data_convertida < data_hoje){
+                campo[c].style.background = '#ffdfd4'
+            }
+    }
+  }
+  // Funções referentes a barra lateral de navegação
+  function w3_open() {
+    document.getElementById("main").style.marginLeft = "10%";
+    document.getElementById("mySidebar").style.width = "10%";
+    document.getElementById("mySidebar").style.display = "block";
+    document.getElementById("openNav").style.display = 'none';
+    document.getElementById("barra").style.height = '52px';
+
+    // Funções referentes a barra lateral de navegação
+  }
+
+  function w3_close() {
+    document.getElementById("main").style.marginLeft = "0%";
+    document.getElementById("mySidebar").style.display = "none";
+    document.getElementById("openNav").style.display = "inline-block";
+
+
+  }
+
+  // Altera o tipo do campo após alterar o filtro de tipo da pesquisa
+  let campo_pesquisa = document.getElementById('campo-pesquisa')
+  let filtro = document.getElementById('filtro') 
+
+  filtro.addEventListener("change",function (){
+    if (filtro.value == 'contrato'){
+        campo_pesquisa.setAttribute("type","number")
+        campo_pesquisa.setAttribute("placeholder","Pesquise pelo numero do contrato")
+  }
+})
+</script>
+
+{% endblock conteudo %}
+
+</body>
+
+</html>

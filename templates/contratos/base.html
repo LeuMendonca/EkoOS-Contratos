@@ -1,0 +1,132 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  {% block head %} {% endblock head %}
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
+
+  <style>
+    body,html {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: auto;
+      color: black!important;
+    }
+
+    #main {
+      flex: 1;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      margin-bottom: 50px;
+      margin-top:2px;
+    }
+ 
+    ::-webkit-scrollbar {
+      width: 0px;
+  }
+
+  footer{
+    flex-direction: column;
+    margin-bottom: 15px;
+    background-color: #0b5ed7;
+    width: 100%;
+    margin-bottom: 0;
+    color: white;
+    padding: 5px;
+  }
+  #texto-footer{
+    margin-bottom: 5px;
+    margin-left: 10px;
+    position: static;
+  }
+
+  #sequencial_item{
+    display:none
+  }
+  </style>
+</head>
+
+<body onload="contratos_vencidos()">
+  <div class="w3-sidebar w3-bar-block w3-card w3-animate-left" style="display: none;" id="mySidebar">
+    <button class="w3-bar-item w3-button" onclick="w3_close()">Fechar</button>
+    <a href="{% url 'insert'%}" class="w3-bar-item w3-button">Cadastro</a>
+    <a href="{% url 'sair' %}" class="w3-bar-item w3-button">Logout</a>
+  </div>
+
+  <div class="w3-teal" id="barra" style="background-color: #0b5ed7 !important;height:52px !important;">
+    <ul style="list-style: none;display:flex">
+      <li>
+        <button id="openNav" class="w3-button w3-teal w3-xlarge" style="background-color:#0b5ed7 !important" onclick="w3_open()">
+        &#9776;
+        </button>
+      </li>
+      <li style="margin-top: 8px;font-size: 25px;" id="usuario">
+        <a href="{% url 'index' %}" style="text-decoration: none; color:white">Bem vindo,
+              {% if request.session.nome_usuario == '1'%}
+              Suporte EkoOS
+              {% else %}
+              {{ request.session.nome_usuario }}
+              {% endif %}!
+        </a>
+      </li>
+        
+    </ul>
+    
+  </div>
+
+    {% block conteudo %} 
+    
+    {% endblock %}
+
+<footer id="footer">
+  <p id="texto-footer">{{ request.session.num_empresa }} - {{ request.session.nome_empresa}}</p>
+</footer>
+  <script>
+
+    // Funções referentes a barra lateral de navegação 
+    
+    function w3_open() {
+      document.getElementById("main").style.marginLeft = "10%";
+      document.getElementById("mySidebar").style.width = "10%";
+      document.getElementById("mySidebar").style.display = "block";
+      document.getElementById("openNav").style.display = 'none';
+      document.getElementById("barra").style.height = '52px';
+      document.getElementById("usuario").style.marginLeft = '10%';
+      document.getElementById("filtro").style.width = '180px';
+
+      document.getElementById('texto-footer').style.marginLeft = '10%'
+      document.getElementById('footer').style.margin = '0%'
+    }
+
+    function w3_close() {
+      document.getElementById("main").style.marginLeft = "0%";
+      document.getElementById("usuario").style.marginLeft = '0';
+      document.getElementById("mySidebar").style.display = "none";
+      document.getElementById("openNav").style.display = "inline-block";
+      document.getElementById("filtro").style.width = '225px';
+
+      document.getElementById('texto-footer').style.marginLeft = '0%'
+      document.getElementById('texto-footer').style.display = 'block'
+    }
+
+
+    
+  </script>
+
+  <script src="{% static 'js/popper.min.js'%}"></script>
+  <script src="{% static 'js/bootstrap.bundle.min.js'%}"></script>
+  <script src="{% static 'js/bootstrap.min.js'%}"></script>
+  <script src="{% static 'js/base.js' %}"></script>
+
+</body>
+</html>

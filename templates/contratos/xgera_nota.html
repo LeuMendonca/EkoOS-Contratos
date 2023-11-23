@@ -1,0 +1,24 @@
+{% extends 'contratos/base.html' %}
+
+
+{% block head %}
+    <title>Excluir Contrato</title>
+{% endblock head %}
+    
+{% block conteudo %}
+<div class="container" style="text-align:center">
+    <div class="py-4"></div>
+    <div class="py-4"></div>
+    <h1>Tem certeza que gerar a nota do contrato {{ seq_contrato}}?</h1>
+
+    <form method="post">
+
+        {% csrf_token %}
+        <div class="text-center">
+            <input type="submit" class="btn btn-danger" value="Gerar">
+            <a href="{% url 'index'%}" class="btn btn-info">Voltar</a>
+        </div>
+    </form>
+</div>
+
+{% endblock conteudo%}

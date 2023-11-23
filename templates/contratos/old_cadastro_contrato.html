@@ -1,0 +1,253 @@
+{% extends 'contratos/base.html' %} {% load static%} {% block head %}
+<title>Cadastro</title>
+<style>
+  form {
+    display: block;
+  }
+
+  #input {
+    margin-top: 5px;
+  }
+
+  #tela {
+    background-color: rgb(255, 255, 255);
+    border: solid 1px;
+    padding: 25px;
+    min-width: 500px;
+    height: 300px;
+    position: absolute;
+    left: 350px;
+    top: 133px;
+    display: none;
+  }
+
+  #tela input {
+    margin-top: 5px;
+  }
+
+  #campo-cpf {
+    margin-left: 18px;
+  }
+
+  #campo-cnpj {
+    margin-left: 10px;
+    margin-bottom: 15px;
+  }
+
+  #opcoes {
+    margin-top: 15px;
+    display: none;
+  }
+
+  #icone-fechar {
+    position: absolute;
+    margin-left: 90%;
+    cursor: pointer;
+    margin-bottom: 50px;
+    color: red;
+  }
+
+  div[name="div_area_produtos"] {
+    margin-top: 10px;
+  }
+
+  hr {
+    border-right: 0 !important;
+    border-left: 0 !important;
+  }
+
+  input[name='vl_total']{
+    pointer-events: none;
+    outline: none"
+  }
+
+  #variaveis {
+    display: inline-block;
+  }
+
+  input#qtd_combustivel{
+    display: none;
+    margin-left:10px;
+  }
+
+  input#qtd_transporte{
+    margin-left:10px;
+    display: none;
+  }
+
+  #qtd_transporte,#qtd_combustivel{
+    width: 115px;
+    height: 25px;
+  }
+
+  body{
+    background-color: rgb(218, 218, 218)!important;
+    
+  }
+
+
+  .container{
+    background-color: rgb(255, 255, 255) ;
+    border-radius: 10px;
+    padding: 25px !important;
+    max-width: 1200px!important;
+    margin-top: 20px;
+    margin-bottom: 100px;
+  }
+
+  input[type=number]::-webkit-inner-spin-button { 
+    -webkit-appearance: none;
+    
+}
+
+  select::-webkit-scrollbar {
+    width: 10px !important;
+}
+</style>
+{% endblock head %}
+
+{% block conteudo %}
+<div id="main">
+<div class="container">
+  <form id="formulario" method="post" class="form-contrato">
+    {% csrf_token %}
+    <div class="row">
+      <div class="col-6">
+        <h3>Contrato</h3>
+
+        <div class="row" style="margin-top:10px;">
+          <select name="select" id="select" class="form-select" style="width: 470px;" autofocus>
+
+            {% for cliente in ek_pessoa %}
+            <option value="{{ cliente.cod_pessoa }}" style="max-width: 470px !important;">{{ cliente.nome }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="py-2"></div>
+
+        <div class="row">
+          <select name="select-franquia" id="select-franquia" class="form-select" style="width: 150px;" onchange="atualizar(),atualiza_preco()">
+            <option value="1">Diário</option>
+            <option value="7">Semanal</option>
+            <option value="15">Quinzenal</option>
+            <option value="30">Mensal</option>
+          </select>
+
+          <select name="horas-select" id="" class="form-select" style="width: 150px; margin-left:5px">
+            <option value="8">8 horas</option>
+            <option value="12">12 horas</option>
+            <option value="16">16 horas</option>
+          </select>
+
+
+          {{ forms.vl_contrato }}
+        </div>
+
+        <div class="py-2"></div>
+
+        <div class="row">
+          {{ forms.dt_inicio_contrato}} {{ forms.dt_fim_contrato }}
+        </div>
+
+        <div class="py-3"></div>
+
+        <div class="row">
+            <button id="gera_contrato" type="submit" class="btn btn-danger" style="width:472px" tabindex="-1" onclick="valida_campos()">Gerar Contrato</button>
+        </div>
+      </div>
+      <div class="col-6">
+        <!--<div class="py-3"></div>-->
+        <h3>Variaveis</h3>
+
+        <div class="py-1"></div>
+
+        <ul style="list-style: none;">
+
+          <li><input type="checkbox" name="cabos" id="cabos" value="S" tabindex="-1">
+            <label for="cabos">Cabos</label>
+          </li>
+
+          <li><input type="checkbox" name="chave_transf_auto" value="S" id="chave_transf_auto" tabindex="-1">
+            <label for="chave_transf_auto">Chave de transferência automática</label>
+          </li>
+
+          <li>
+            <input type="checkbox" name="chave_transf_manual" value="S" id="chave_transf_manual" tabindex="-1">
+            <label for="chave_transf_manual">Chave de transferência manual</label>
+          </li>
+
+          <li><input type="checkbox" name="combustivel" id="combustivel" value="S" onchange="EnviaDados('combustivel')" tabindex="-1">
+            <label for="combustivel">Combustível</label>
+            <input type="number" name="qtd_combustivel" class="form-control" id="qtd_combustivel" placeholder="Litros">
+          </li>
+          <li><input type="checkbox" name="instalacao" id="instalacao" value="S" tabindex="-1">
+            <label for="instalacao">Instalação</label>
+          </li>
+
+          <li><input type="checkbox" name="manutencao" id="manutencao" value="S" tabindex="-1">
+            <label for="manutencao">Manutenção periódica</label>
+          </li>         
+
+          <li><input type="checkbox" name="transporte" id="transporte" value="S" onchange="EnviaDados('transporte')" tabindex="-1">
+            <label for="transporte">Transporte</label>
+            <input type="number" name="qtd_transporte" class="form-control" id="qtd_transporte" placeholder="Distancia" tabindex="-1">
+          </li>
+
+        </ul>
+      </div>
+    </div>
+    <hr>
+    <h3>Produtos do Contrato</h3>
+
+
+    <div class="row">
+      <div class="col-sm-auto py-1">
+        <select name="select-produto" id="select-produto" class="form-select" style="min-width: 450px">
+          {% for produto in ek_produto %}
+          <option value="{{ produto.cod_produto }}">
+            {{ produto.desc_produto }}
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="col-auto">
+        <input type="number" class="form-control" style="margin-top:5px; height:35px; width:100px;"
+          placeholder="Dias" name="quantidade" required onkeyup="atualiza_preco()">
+      </div>
+
+
+      <div class="col-auto">
+        <input type="number" placeholder="Valor diário" name="campo_valor" class="form-control" required
+          style="height: 35px; margin-top: 5px" onkeyup="atualiza_preco()" />
+      </div>
+
+      <div class="col-auto">
+        <input type="number" placeholder="Total" name="vl_total" class="form-control" tabindex="-1"
+          style="height: 35px; margin-top: 5px;width:100px" />
+      </div>
+
+      <div class="col-auto">
+        <input type="button" value="Adicionar" class="btn btn-warning btn-sm" style="margin-top: 8px; height: 30px"
+          onclick="adicionar_item()" />
+      </div>
+    </div>
+
+  </form>
+</div>
+</div>
+</div>
+
+<div class="py-4"></div>
+
+<script>
+  const botao_gerar = window.document.getElementById('gera_contrato')
+
+  botao_gerar.addEventListener("keydown",function(e){
+      if (e.key == 'Enter'){
+        e.preventDefault();
+      }
+  })
+</script>
+{% endblock conteudo %}

@@ -1,0 +1,57 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+
+</head>
+<body>
+    
+    <div class="page">
+        <form method="POST" class="formLogin" action="/autenticando/" style="
+    width: 453px;
+    height: 512px;
+">
+           
+           {% if status == '1' %}
+            
+           <div id="mensagem_erro">
+               Login ou senha invalidos    
+            </div>
+            
+            {% endif %}
+
+            
+            {% if status == '2' %}
+                <div id="mensagem_erro">
+                    Faça login para continuar.
+                </div>
+            {% endif %}
+                
+
+            {% csrf_token %}
+            <h1>EkoOS Contratos</h1>
+            <p>Digite os seus dados de acesso no campo abaixo:</p>
+            <label for="Login">Login</label>
+                {{ formulario.login }}
+            <label for="password">Senha</label>
+                {{ formulario.password }}
+            
+                <select name="empresa" id="select">
+                    {% for empresa in empresas %}
+                        <option class="opcoes" value="{{ empresa.num_empresa }}">{{ empresa.nome_empresa }}</option>
+                    {% endfor %}
+                        
+                </select name="empresa">
+            <input type="submit" value="Acessar" class="btn" />
+
+           
+        </form>
+    </div>
+
+</body>
+</html>
