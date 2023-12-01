@@ -578,7 +578,7 @@ def gerador_contrato(request,seq_contrato):
     caminho ="C:/ekoos_contrato/midia/Contrato-"+ str(seq_contrato) + '.pdf'
     caminho = os.path.join(settings.MEDIA_ROOT,caminho)
 
-    gera_contrato(caminho,seq_contrato)
+    gera_contrato(caminho,seq_contrato,connection)
     
     
     if os.path.exists(caminho):

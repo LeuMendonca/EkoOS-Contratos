@@ -4,17 +4,6 @@ import psycopg2 as pg
 import num2words
 import datetime
 
-conexao = pg.connect(
-    dbname = 'leonardo_minasbahia_23102023',
-    port = '5432',
-    host = '192.168.15.7',
-    user = 'postgres',
-    password = 'postgres'
-)
-
-cursor = conexao.cursor()
-
-
 def data(mes):
     meses = ['01','02','03','04','05','06','07','08','09','10','11','12']
     nome_mes = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro']
@@ -24,9 +13,9 @@ def data(mes):
             return nome_mes[x]
 
 
-def gera_contrato(caminho,seq_contrato):
+def gera_contrato(caminho,seq_contrato,conexao):
+    cursor = conexao.cursor()
     
-    print(caminho)
     cnv = canvas.Canvas(f"{caminho}")
     
         
@@ -34,12 +23,7 @@ def gera_contrato(caminho,seq_contrato):
         altura = -20
 
         # Retangulo
-        cnv.rect(
-            35,
-            330,
-            500,
-            altura
-        )
+        cnv.rect(35,330,500,altura)
 
         # Linhas
 
@@ -61,17 +45,17 @@ def gera_contrato(caminho,seq_contrato):
 
 
         cursor.execute(f'''
-                        select 
-                        ek_contrato_detalhe.seq_contrato_detalhe,
-                        ek_contrato_detalhe.seq_contrato,
-                        ek_contrato_detalhe.cod_produto,
-                        ek_contrato_detalhe.desc_item_contrato,
-                        ek_contrato_detalhe.vl_item_contrato,
-                        ek_contrato_detalhe.quantidade,
-                        ek_contrato.franquia,
-                        ek_contrato_detalhe.unid_medida
-                        from ek_contrato_detalhe inner join ek_contrato on ek_contrato_detalhe.seq_contrato = ek_contrato.seq_contrato
-                        where ek_contrato.seq_contrato = {seq_contrato} 
+                select 
+                ek_contrato_detalhe.seq_contrato_detalhe,
+                ek_contrato_detalhe.seq_contrato,
+                ek_contrato_detalhe.cod_produto,
+                ek_contrato_detalhe.desc_item_contrato,
+                ek_contrato_detalhe.vl_item_contrato,
+                ek_contrato_detalhe.quantidade,
+                ek_contrato.franquia,
+                ek_contrato_detalhe.unid_medida
+                from ek_contrato_detalhe inner join ek_contrato on ek_contrato_detalhe.seq_contrato = ek_contrato.seq_contrato
+                where ek_contrato.seq_contrato = {seq_contrato} 
                         ''')
         resultado = cursor.fetchall()
         
@@ -138,6 +122,8 @@ def gera_contrato(caminho,seq_contrato):
     
     
     def gera_contrato_sub(seq_contrato):
+    
+
         cursor.execute(
             f'''
                 select nome,
@@ -420,6 +406,7 @@ def gera_contrato(caminho,seq_contrato):
 
         #cnv.drawImage(r"C:/ekoos_contrato/funcoes/footer.jpeg",10,0)
         cnv.save()
+
     gera_contrato_sub(seq_contrato=seq_contrato)
 
 
