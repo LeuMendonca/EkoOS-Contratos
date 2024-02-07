@@ -199,53 +199,53 @@
     <hr>
     <h3>Produtos do Contrato</h3>
 
-
-    <div class="row">
-      <div class="col-sm-auto py-1">
-        <select name="select_produto" id="select-produto" class="form-select" style="max-width: 380px">
-          {% for produto in ek_produto %}
-          <option value="{{ produto.cod_produto }}">
-            {{ produto.desc_produto }}
-          </option>
-          {% endfor %}
-        </select>
-      </div>
-    
-      <div class="col-auto">
-        <input type="number" class="form-control" style="margin-top:5px; height:35px; width:110px;"
-          placeholder="Quantidade" name="quantidade" required onkeyup="atualiza_preco()">
-      </div>
-
-      <div class="col-auto">
-          <select name="unid_medida" id="unid_medida" class="form-select" style="margin-top:5px; height:35px;">
-              <option value="Dias">Dias</option>
-              <option value="Semanas">Semanas</option>
-              <option value="Quinzenas">Quizenas</option>
-              <option value="Meses">Meses</option>
-              <option value="Horas">Horas</option>
-              <option value="KM">Quilometros</option>
-              <option value="UN">Unidades</option>
+    <div class="container_items">
+      <div class="row">
+        <div class="col-sm-auto py-1">
+          <select name="select_produto" id="select-produto" class="form-select" style="max-width: 380px">
+            {% for produto in ek_produto %}
+            <option value="{{ produto.cod_produto }}">
+              {{ produto.desc_produto }}
+            </option>
+            {% endfor %}
           </select>
+        </div>
+      
+        <div class="col-auto">
+          <input type="number" class="form-control" style="margin-top:5px; height:35px; width:110px;"
+            placeholder="Quantidade" name="quantidade" required onkeyup="atualiza_preco()">
+        </div>
+
+        <div class="col-auto">
+            <select name="unid_medida" id="unid_medida" class="form-select" style="margin-top:5px; height:35px;">
+                <option value="Dias">Dias</option>
+                <option value="Semanas">Semanas</option>
+                <option value="Quinzenas">Quizenas</option>
+                <option value="Meses">Meses</option>
+                <option value="Horas">Horas</option>
+                <option value="KM">Quilometros</option>
+                <option value="UN">Unidades</option>
+            </select>
+        </div>  
+
+
+
+        <div class="col-auto">
+          <input type="number" placeholder="Valor unitário" name="campo_valor" class="form-control" required
+            style="height: 35px; margin-top: 5px;" onkeyup="atualiza_preco()" />
+        </div>
+
+        <div class="col-auto">
+          <input type="number" placeholder="Total" name="vl_total" class="form-control" tabindex="-1"
+            style="height: 35px; margin-top: 5px;width:100px" />
+        </div>
+
+        <div class="col-auto">
+          <input type="button" value="Adicionar" class="btn btn-warning btn-sm" style="margin-top: 8px; height: 30px"
+            onclick="adicionar_item()" />
+        </div>
+      </div>
     </div>
-
-
-
-      <div class="col-auto">
-        <input type="number" placeholder="Valor unitário" name="campo_valor" class="form-control" required
-          style="height: 35px; margin-top: 5px;" onkeyup="atualiza_preco()" />
-      </div>
-
-      <div class="col-auto">
-        <input type="number" placeholder="Total" name="vl_total" class="form-control" tabindex="-1"
-          style="height: 35px; margin-top: 5px;width:100px" />
-      </div>
-
-      <div class="col-auto">
-        <input type="button" value="Adicionar" class="btn btn-warning btn-sm" style="margin-top: 8px; height: 30px"
-          onclick="adicionar_item()" />
-      </div>
-    </div>
-
   </form>
 </div>
 </div>
